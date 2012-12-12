@@ -1,0 +1,43 @@
+<html>
+<body>
+<script type="text/javascript" src="/static/fb.js"></script>
+<script type="text/javascript">
+var base_url = '{{base_url}}';
+
+fbInit(login);
+
+function login() {
+    FB.getLoginStatus(function(response) {
+        if (!(response.status === 'connected')) {
+            FB.login(function(connect_response) {
+                if (!(connect_response.status === 'connected')) {
+                    failLogin();
+                } else {
+                    loadPage(connect_response);
+                }
+            }, {scope: 'user_groups'});
+        } else {
+            loadPage(response);
+        }
+    });
+}
+
+function failLogin() {
+    alert('Sorry, this page will not work without authorization.');
+}
+
+function loadPage(auth) {
+    window.location.href = base_url + '?access_token=' + auth.authResponse.accessToken;
+}
+
+function testAPI() {
+    console.log('Welcome!  Fetching your information...');
+    FB.api('/me', function(response) {
+        console.log('Good to see you, ' + response.name + '.');
+    });
+}
+</script>
+
+<h1>Loading...</h1>
+</body>
+</html>

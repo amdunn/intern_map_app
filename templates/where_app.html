@@ -1,0 +1,41 @@
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="static/map.css">
+</head>
+<body>
+<script type="text/javascript" src="static/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="static/fb.js"></script>
+<script type="text/javascript">
+// get_credentials() comes from this block
+{{map_credentials|safe}}
+</script>
+<script type="text/javascript" src="https://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0&s=1"></script>
+<script type="text/javascript" src="static/map.js"></script>
+<script type="text/javascript">
+fbInit(checkConnected);
+
+// location_map comes from this block
+{{intern_data|safe}}
+
+function checkConnected() {
+    FB.getLoginStatus(function(response) {
+        if (!(response.status === 'connected')) {
+            alert('Hmm... expected you would be connected here, please report...');
+        } else {
+            $(document).ready(function () {
+                // XXX: maybe want to load_map while we're still waiting
+                // for the Facebook JS to initialize?
+                load_map();
+                process_location_map(location_map);
+            });
+        }
+    });
+}
+</script>
+
+<h1>Where are the Facebook interns from?</h1>
+<p>Note: It takes a few seconds to load the places once the map is visible...</p>
+<p>Click on a pin to see the people from there, click again to close the info.</p>
+<div id="map_div" style="position:absolute; width:600px; height:400px;" class="map"></div>
+</body>
+</html>
