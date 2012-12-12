@@ -1,4 +1,4 @@
-# Pieces taken from the Heroku sample Facebook app
+# fb_call, main routine taken from the Heroku sample Facebook app
 
 import os
 import json
