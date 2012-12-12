@@ -65,7 +65,6 @@ function get_user_data(users, callback) {
     get_user_data1(users, [], callback);
 }
 
-// Maybe show content only when users loaded for a location?
 function process_location(location, users) {
     if (location === 'Fail')
         return;
