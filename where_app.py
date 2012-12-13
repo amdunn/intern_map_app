@@ -6,7 +6,10 @@ import json
 import requests
 from flask import Flask, request, render_template, abort
 
-from conf import group_number
+from conf import group_number, data_root
+
+def get_data(relative_path):
+    return open(data_root + relative_path, 'r').read()
 
 def fb_call(call, args=None):
     url = "https://graph.facebook.com/{0}".format(call)
@@ -27,13 +30,12 @@ def access_allowed(access_token):
     return False
 
 app = Flask(__name__)
+intern_data = get_data('intern_data.js')
+map_credentials = get_data('map_credentials.js')
 
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
     return render_template('channel.html')
-
-intern_data = ''
-map_credentials = ''
 
 @app.route('/')
 def index():
@@ -58,6 +60,4 @@ def index():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    intern_data = open('intern_data.js', 'r').read()
-    map_credentials = open('map_credentials.js', 'r').read()
     app.run(host='0.0.0.0', port=port)
