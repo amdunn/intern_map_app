@@ -3,10 +3,12 @@
 <script type="text/javascript" src="/static/fb.js"></script>
 <script type="text/javascript">
 var base_url = '{{base_url}}';
+var FB_perms = 'user_groups';
 
-fbInit(login);
+//fbInit(popupLogin);
+fbInit(windowLogin);
 
-function login() {
+function popupLogin() {
     FB.getLoginStatus(function(response) {
         if (!(response.status === 'connected')) {
             FB.login(function(connect_response) {
@@ -15,19 +17,23 @@ function login() {
                 } else {
                     loadPage(connect_response);
                 }
-            }, {scope: 'user_groups'});
+            }, {scope: FB_perms});
         } else {
-            loadPage(response);
+            loadPage(response.authResponse.accessToken);
         }
     });
+}
+
+function windowLogin() {
+    fbWindowLogin(FB_perms, loadPage, failLogin);
 }
 
 function failLogin() {
     alert('Sorry, this page will not work without authorization.');
 }
 
-function loadPage(auth) {
-    window.location.href = base_url + '?access_token=' + auth.authResponse.accessToken;
+function loadPage(access_token) {
+    window.location.href = base_url + '?access_token=' + access_token;
 }
 
 function testAPI() {
