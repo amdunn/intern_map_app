@@ -30,6 +30,14 @@ function add_pin_infobox_toggle(pos, content) {
 
     the_map.entities.push(pin);
     the_map.entities.push(box);
+
+    // By quickly toggling the visibility of the infobox, we cause the
+    // Bing Maps API to calculate the size of the custom HTML for
+    // proper placement.  I don't see any flickering either.  Note: it
+    // seems this snippet must be after the entity is pushed, not just
+    // after the box is created.
+    box.setOptions({ visible: true });
+    box.setOptions({ visible: false });
 }
 
 function log2(x) {
