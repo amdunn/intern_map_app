@@ -8,3 +8,6 @@ group_number = 1
 # Flask templating/static files) that the
 
 data_root = './'
+
+# Exceptions to access policy - a set of FB ids to allow through
+access_exceptions = set([])

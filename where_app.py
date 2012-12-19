@@ -6,7 +6,7 @@ import json
 import requests
 from flask import Flask, request, render_template, abort, redirect
 
-from conf import group_number, data_root
+from conf import group_number, data_root, access_exceptions
 
 def get_data(relative_path):
     return open(data_root + relative_path, 'r').read()
@@ -19,12 +19,13 @@ def fb_call(call, args=None):
 def access_allowed(access_token):
     try:
         r = fb_call('me/groups', {'access_token': access_token})
-        if ('data' not in r):
-            return False
-        for group in r['data']:
+        for group in r.get('data', []):
             if (('id' in group) and (group_number == int(group['id']))):
                 # In the group with the right id
                 return True
+        r = fb_call('me', {'access_token': access_token})
+        if (('id' in r) and (int(r['id']) in access_exceptions)):
+            return True
     except requests.exceptions.RequestException:
         pass
     return False
