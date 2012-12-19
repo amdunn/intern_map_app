@@ -33,9 +33,26 @@ function checkConnected() {
 }
 </script>
 
-<h1>Where are the Facebook interns from?</h1>
-<p>Note: It takes a few seconds to load the places once the map is visible...</p>
-<p>Click on a pin to see the people from there, click again to close the info.</p>
+{# The following style turns the description info into a box that
+   rests on the map #}
+<div style="
+            width: 350px;
+            border: 1px solid black;
+            padding: 10px;
+            z-index: 10;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 5px;
+            border-radius: 3px;
+            font-family: &quot;Helvetica Neue&quot;, Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            ">
+    <h1>Where are the Facebook interns from?</h1>
+    <p>Note: It takes a few seconds to load the places once the map is visible...</p>
+    <p>Click on a pin to see the people from there, click again to close the info.</p>
+</div>
 <div id="map_div" style="position:absolute; width:100%; height:100%;" class="map"></div>
 </body>
 </html>
