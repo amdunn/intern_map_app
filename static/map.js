@@ -32,10 +32,43 @@ function add_pin_infobox_toggle(pos, content) {
     the_map.entities.push(box);
 }
 
+function log2(x) {
+    return Math.log(x)/Math.log(2);
+}
+
 function load_map() {
-    the_map = new Microsoft.Maps.Map(document.getElementById("map_div"),
+    var map_elt = document.getElementById("map_div");
+
+    // Map creation and option setting
+
+    // Scale to aspect_ratio (width to height)
+    var aspect_ratio = 4/3;
+    var width = $(map_elt).width();
+    var height = $(map_elt).height();
+    if (width != 0 && height != 0) {
+        if (width > height)
+            width = height * aspect_ratio;
+        else
+            height = width / aspect_ratio;
+        $(map_elt).width(width);
+        $(map_elt).height(height);
+    }
+
+    the_map = new Microsoft.Maps.Map(map_elt,
                                      { credentials: get_credentials(),
                                        showMapTypeSelector: false } );
+
+    // Set zoom base upon correspondence described here:
+    // http://msdn.microsoft.com/en-us/library/bb259689.aspx
+    //
+    // wherein 512x512 pixels is zoom level 1, with an additional
+    // doubling in resolution per zoom level.  So we zoom to the level
+    // that is the next greatest necessary to fit the height 1:1.
+    var zoom_level = Math.max(Math.ceil(log2(height / 512)) + 1, 1);
+    var options = the_map.getOptions();
+    options.zoom = zoom_level;
+
+    the_map.setView(options);
 
     // dc_pos: lat-long position of Washington, DC
     // var dc_pos = new Microsoft.Maps.Location(38.8900, -77.0300);
