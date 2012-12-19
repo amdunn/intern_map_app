@@ -1,5 +1,21 @@
 var the_map;
 
+var active_box = null;
+
+function make_toggle_callback(box) {
+    return function (e) {
+        if (!(active_box === null)) {
+            active_box.setOptions({ visible: false });
+        }
+        if (!(active_box === box)) {
+            box.setOptions({ visible: true });
+            active_box = box;
+        } else {
+            active_box = null;
+        }
+    };
+}
+
 function add_pin_infobox_toggle(pos, content) {
     var pin = new Microsoft.Maps.Pushpin(pos);
     var box = new Microsoft.Maps.Infobox(pos,
@@ -9,9 +25,7 @@ function add_pin_infobox_toggle(pos, content) {
                                            visible: false,
                                            htmlContent: content });
     Microsoft.Maps.Events.addHandler(pin, 'click',
-                                     function (e) {
-                                         box.setOptions({ visible: !box.getVisible() });
-                                     });
+                                     make_toggle_callback(box));
 
 
     the_map.entities.push(pin);
