@@ -133,7 +133,7 @@ function process_location(location, users) {
                 pic_row = pic_row + ('<td>' +
                                      '<img src="' + user_datum.pic_link + '">' +
                                      '</td>');
-                name_row = name_row + ('<td>' +
+                name_row = name_row + ('<td align="center">' +
                                        '<a target="_blank" href="' + user_datum.profile_link + '">' + user_datum.name + '</a>' +
                                        '</td>');
             }
