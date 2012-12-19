@@ -4,7 +4,7 @@ import os
 import json
 
 import requests
-from flask import Flask, request, render_template, abort
+from flask import Flask, request, render_template, abort, redirect
 
 from conf import group_number, data_root
 
@@ -37,12 +37,31 @@ map_credentials = get_data('map_credentials.js')
 def get_channel():
     return render_template('channel.html')
 
+def should_redirect_https(request):
+    """Calculate whether we need to redirect.  This accommodates a
+    Heroku-specific quirk wherein we can appear to be servicing HTTP
+    while really be servicing HTTPS (e.g. base_url will be HTTP).
+    Heroku has base_url always starting with http and sets
+    X-Forwarded-Proto.  Non-Heroku will have a faithful beginning of
+    base_url (or this code needs to be modified for the service).
+    """
+    base_url = request.base_url
+    proto_header = request.headers.get('X-Forwarded-Proto', None)
+    return ((proto_header != 'https') and
+            (not base_url.startswith('https')))
+
 @app.route('/')
 def index():
+    # print(request.headers)
+
     base_url = request.base_url
     if not base_url.startswith('https'):
         assert(base_url.startswith('http'))
         base_url = 'https' + base_url[4:]
+
+    if (should_redirect_https(request)):
+        # base_url has been made secure already
+        return redirect(base_url)
 
     if ('access_token' not in request.args):
         return render_template('my_index.html', base_url=base_url)
