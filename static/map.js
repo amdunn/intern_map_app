@@ -97,7 +97,8 @@ function get_user_data1(users, user_data, callback) {
             user_datum.name = response.name;
             user_datum.profile_link = response.link;
 
-            FB_do('/' + user.toString() + '/picture', function(response) {
+            // type=normal -> 100 px wide pictures
+            FB_do('/' + user.toString() + '/picture?type=normal', function(response) {
                 user_datum.pic_link = response.data.url;
 
                 user_data.push(user_datum);
